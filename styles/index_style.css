@@ -1,0 +1,118 @@
+:root {
+   --bg: #ffffff; --soft: #f6f6f8; --line: rgba(0, 0, 0, .09);
+   --text: #1d1d1f; --muted: #86868b; --blue: #0a84ff;
+   --gap: 14px; --menubar-h: 30px; --dock-h: 80px; --radius: 12px;
+   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+   --mono: "SF Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+}
+
+html, body { height: 100%; margin: 0; overflow: hidden; }
+
+body {
+   display: flex; flex-direction: column;
+   font-family: var(--font); font-size: 13px; color: var(--text);
+   background:
+      radial-gradient(60% 50% at 18% 20%, #cfe3ff 0, transparent 70%),
+      radial-gradient(50% 45% at 85% 78%, #ffdcec 0, transparent 70%),
+      radial-gradient(40% 40% at 72% 12%, #e6e0ff 0, transparent 70%),
+      #f2f4f8;
+}
+
+/* ---------- Barra de menu ---------- */
+#menubar {
+   flex-shrink: 0; height: var(--menubar-h); padding: 0 12px;
+   display: flex; align-items: center; justify-content: space-between;
+   background: rgba(255, 255, 255, .6); backdrop-filter: blur(20px) saturate(1.6);
+   border-bottom: 1px solid var(--line);
+}
+.mb-left { display: flex; align-items: center; gap: 10px; }
+.mb-btn { border: 0; background: transparent; padding: 2px 6px; border-radius: 5px; font-size: 15px; color: var(--text); }
+.mb-btn:hover { background: rgba(0, 0, 0, .07); }
+#clock { color: var(--text); }
+
+/* ---------- Menu iniciar ---------- */
+#start-menu {
+   position: absolute; top: calc(var(--menubar-h) + 4px); left: 8px; z-index: 100;
+   min-width: 200px; padding: 5px; border-radius: 10px;
+   background: rgba(255, 255, 255, .85); backdrop-filter: blur(24px) saturate(1.6);
+   border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0, 0, 0, .15);
+}
+#start-menu.hidden { display: none; }
+.menu-item {
+   display: flex; align-items: center; gap: 10px; width: 100%;
+   padding: 6px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--text); text-align: left;
+}
+.menu-item:hover { background: var(--blue); color: #fff; }
+.mb-btn:focus-visible, .menu-item:focus-visible, .mac-btn:focus-visible, .dock-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+/* ---------- Área de trabalho e janelas (tiling) ---------- */
+#workspace { flex: 1; position: relative; min-height: 0; }
+
+.hypr-window {
+   position: absolute; display: flex; flex-direction: column; box-sizing: border-box;
+   background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+   transition: left .3s cubic-bezier(.2, .8, .2, 1), top .3s cubic-bezier(.2, .8, .2, 1),
+               width .3s cubic-bezier(.2, .8, .2, 1), height .3s cubic-bezier(.2, .8, .2, 1),
+               opacity .16s, transform .16s, box-shadow .2s;
+   animation: pop .22s ease-out;
+}
+.hypr-window.active { box-shadow: 0 14px 40px rgba(0, 0, 0, .16), 0 0 0 .5px rgba(0, 0, 0, .12); }
+.hypr-window.closing { opacity: 0; transform: scale(.96); pointer-events: none; }
+@keyframes pop { from { opacity: 0; transform: scale(.96); } }
+
+.hypr-titlebar {
+   flex-shrink: 0; height: 38px; padding: 0 14px;
+   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+   background: var(--soft); border-bottom: 1px solid var(--line);
+}
+.hypr-title { font-size: 13px; font-weight: 600; color: var(--muted); }
+.hypr-window.active .hypr-title { color: #4a4a4f; }
+.hypr-content { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+.macos-buttons { display: flex; gap: 8px; }
+.macos-btn {
+   width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%;
+   display: grid; place-items: center; background: #d1d1d6; color: transparent;
+   font-size: 10px; line-height: 1;
+}
+.hypr-window.active .btn-close { background: #ff5f56; }
+.hypr-window.active .btn-close:hover { background: #e0443e; }
+.btn-close:hover::after { content: "×"; color: rgba(0, 0, 0, .55); font-weight: 700; }
+
+/* Botão padrão dos apps */
+.mac-btn {
+   display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+   border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--text);
+   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+.mac-btn:hover { background: var(--soft); }
+.mac-btn:disabled { opacity: .4; pointer-events: none; }
+.mac-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.mac-btn.primary:hover { background: #0071e3; }
+
+/* ---------- Dock ---------- */
+#dock-area { flex-shrink: 0; height: var(--dock-h); display: flex; align-items: center; justify-content: center; }
+#dock {
+   display: flex; gap: 12px; padding: 8px 12px 10px; border-radius: 20px;
+   background: rgba(255, 255, 255, .55); backdrop-filter: blur(20px) saturate(1.6);
+   border: 1px solid rgba(255, 255, 255, .8); box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+}
+.dock-btn { position: relative; padding: 0; border: 0; background: none; transition: transform .16s; }
+.dock-btn:hover { transform: translateY(-6px) scale(1.12); }
+.dock-icon {
+   width: 46px; height: 46px; border-radius: 11px; display: grid; place-items: center;
+   font-size: 24px; color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+}
+.ic-terminal { background: linear-gradient(#48484a, #1c1c1e); }
+.ic-editor { background: linear-gradient(#ffe066, #ffb400); }
+.ic-files { background: linear-gradient(#5ac8fa, #0a84ff); }
+.dock-btn::after {
+   content: ""; position: absolute; left: 50%; bottom: -7px; width: 4px; height: 4px;
+   margin-left: -2px; border-radius: 50%; background: #4a4a4f; opacity: 0;
+}
+.dock-btn.aberto::after { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+   .hypr-window, .dock-btn { transition: none; animation: none; }
+}

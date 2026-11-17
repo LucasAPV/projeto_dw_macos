@@ -7,8 +7,8 @@ const workspace = document.getElementById('workspace');
 
 export const APPS = {
    terminal: { title: 'Terminal', html: './apps/terminal.html', css: './styles/terminal_style.css' },
-   editor: { title: 'editor', html: './apps/editor.html', css: './styles/editor_style.css' },
-   files: { title: 'files', html: './apps/files.html', css: './styles/files_style.css' },
+      editor: { title: 'Editor', html: './apps/editor.html', css: './styles/editor_style.css' },
+   files: { title: 'Arquivos', html: './apps/files.html', css: './styles/files_style.css' },
 };
 
 const windows = [];       // { id, el, mod }

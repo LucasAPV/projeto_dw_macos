@@ -1,13 +1,17 @@
 import { curr_dir_pointer, notificar_fs } from "../index.mjs";
 import { append_file_to_dir, concat_to_file, create_file_obj, find_file } from "../file_control.mjs";
 
-const estado = new WeakMap(); // janela -> { arquivo }
+const estado = new WeakMap(); // janela -> { arquivo, quill}
 
 export function init(el, { args }) {
    const nome = el.querySelector("#editor-nome");
-   const texto = el.querySelector("#editor-texto");
+   const quill = new Quill(el.querySelector("#editor-quill"), {
+      theme: "snow",
+      placeholder: "Comece a escrever…",
+      modules: { toolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }], ["clean"]] },
+   });
    const status = el.querySelector("#editor-status");
-   estado.set(el, { arquivo: null });
+   estado.set(el, { arquivo: null, quill });
 
    const aviso = (msg) => {
       status.textContent = msg;
@@ -28,7 +32,7 @@ export function init(el, { args }) {
          nome.readOnly = true;
       }
 
-      concat_to_file(e.arquivo, texto.value);
+      concat_to_file(e.arquivo, e.quill.getText().replace(/\n$/, ""));
       notificar_fs();
       aviso("Salvo");
    };
@@ -48,7 +52,7 @@ export function open(el, { file } = {}) {
    const nome = el.querySelector("#editor-nome");
    nome.value = file.file_name;
    nome.readOnly = true;
-   el.querySelector("#editor-texto").value = String(file.content);
+   estado.get(el).quill.setText(String(file.content));
 }
 
-export const focus = (el) => el.querySelector("#editor-texto").focus();
+export const focus = (el) => estado.get(el)?.quill.focus();

@@ -7,7 +7,7 @@ export const create_file_obj = (file_name) => {
 }
 
 export const append_file_to_dir = (dir, file) => {
-   file.pwd = (dir.pwd == "/" ? "" : dir.pwd) + file.file_name;
+   file.pwd = (dir.pwd == "/" ? "" : dir.pwd) + "/" + file.file_name;
    dir.files.push(file);
 }
 

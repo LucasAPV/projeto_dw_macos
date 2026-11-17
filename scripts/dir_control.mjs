@@ -1,3 +1,5 @@
+import { create_file_obj, append_file_to_dir, concat_to_file } from "./file_control.mjs";
+
 export const create_dir_obj = (dir_name) => {
    return {
       "dir_name": dir_name, 
@@ -30,17 +32,7 @@ export const return_content_dir = (dir) => {
 
 
 export const is_dir_in_dir = (dir, name_dir_to_find) => {
-   let found = false;
-   return_content_dir(dir).every(elem => {
-      if(elem.includes(name_dir_to_find)) {
-         found = true;
-         return false /* faz brekar do every */
-      }
-
-      return true /* faz o every continuar */
-   });
-
-   return found /* retorna se achou */
+   return dir.children_dir.some(elem => elem.dir_name === name_dir_to_find);
 }
 
 export const change_dir = (to_dir_name, curr_dir_pointer) => {
@@ -85,4 +77,32 @@ export const change_dir = (to_dir_name, curr_dir_pointer) => {
    }
 
    return "OKAY";
+}
+
+// Converte a arvore em dados puros (sem pwd e father_dir, que sao circulares)
+export const serialize_dir = (dir) => ({
+   dir_name: dir.dir_name,
+   children_dir: dir.children_dir.map(serialize_dir),
+   files: dir.files.map(f => ({ file_name: f.file_name, content: String(f.content) })),
+});
+
+// Reconstroi a arvore, refazendo pwd e father_dir
+export const hydrate_dir = (data, father_dir = null) => {
+   const dir = create_dir_obj(data.dir_name);
+
+   if (father_dir) {
+      append_dir(father_dir, dir);
+   } else {
+      dir.pwd = "/";
+      dir.father_dir = {};
+   }
+
+   data.files.forEach(f => {
+      const file = create_file_obj(f.file_name);
+      concat_to_file(file, f.content);
+      append_file_to_dir(dir, file);
+   });
+
+   data.children_dir.forEach(child => hydrate_dir(child, dir));
+   return dir;
 }

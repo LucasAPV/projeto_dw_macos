@@ -7,7 +7,10 @@
 #editor-nome:focus { border-color: var(--blue); background: #fff; }
 #editor-nome:read-only { border-color: transparent; background: transparent; font-weight: 600; }
 #editor-status { color: var(--muted); font-size: 12px; }
-#editor-texto {
-   flex: 1; resize: none; padding: 14px 16px; border: 0; outline: 0;
-   background: #fff; color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.6;
+.editor .ql-toolbar.ql-snow { flex-shrink: 0; border: 0; border-bottom: 1px solid var(--line); background: var(--soft); }
+#editor-quill.ql-container.ql-snow {
+   flex: 1; min-height: 0; border: 0; background: #fff; color: var(--text);
+   font-family: var(--mono); font-size: 13px; line-height: 1.6;
 }
+#editor-quill .ql-editor { padding: 14px 16px; }
+#editor-quill .ql-editor.ql-blank::before { font-style: normal; color: var(--muted); left: 16px; }

@@ -47,6 +47,7 @@ export function parse_command(str) {
       //parse dos comandos de 2 entradas
       case "mkdir":
          if (!cmds[1]) return "Uso: mkdir [nome-pasta]";
+         if (curr_dir_pointer.curr_dir_object.children_dir.some(d => d.dir_name === cmds[1])) return `Ja existe uma pasta chamada ${cmds[1]}`;
          let new_dir = create_dir_obj(cmds[1]);
          append_dir(curr_dir_pointer.curr_dir_object, new_dir);
          notificar_fs();
@@ -55,6 +56,7 @@ export function parse_command(str) {
 
       case "touch":
          if (!cmds[1]) return "Uso: touch [nome-arquivo]";
+         if (find_file(curr_dir_pointer.curr_dir_object, cmds[1])) return `Ja existe um arquivo chamado ${cmds[1]}`;
          let new_file = create_file_obj(cmds[1]);
          append_file_to_dir(curr_dir_pointer.curr_dir_object, new_file);
          notificar_fs();
@@ -73,6 +75,7 @@ export function parse_command(str) {
       break;
 
       case "cat": {
+         if (!cmds[1]) return "Uso: cat [nome-arquivo]";
          const f = find_file(curr_dir_pointer.curr_dir_object, cmds[1]);
          return f ? String(f.content) : `Arquivo ${cmds[1]} nao encontrado`;
       }
